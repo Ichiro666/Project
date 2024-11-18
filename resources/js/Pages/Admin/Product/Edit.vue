@@ -2,21 +2,30 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
+// Menerima props product dari server
 const props = defineProps({
     product: Object,
 });
-// Menggunakan useForm untuk menangani input data
+
+// Menggunakan useForm untuk menangani data input
 const form = useForm({
-    name: props.product.name,
-    category: props.product.category,
-    price: props.product.price,
+    name: props.product.name || "",
+    category: props.product.category || "",
+    price: props.product.price || "",
 });
 
+// Fungsi untuk memperbarui produk
 const updateProduct = () => {
-    const res = form.put(route("products.update", props.product.id));
-    if (res) {
-        form.reset();
-    }
+    form.put(route("products.update", props.product.id), {
+        onSuccess: () => {
+            alert("Product updated successfully!");
+            form.reset();
+        },
+        onError: (errors) => {
+            console.error("Update failed:", errors);
+            alert("Failed to update product. Please check the input.");
+        },
+    });
 };
 </script>
 
@@ -25,7 +34,7 @@ const updateProduct = () => {
     <AuthenticatedLayout>
         <div class="mt-4 mx-4">
             <div class="flex justify-between items-center mb-6">
-                <h5 class="text-xl font-bold">Create Product</h5>
+                <h5 class="text-xl font-bold">Edit Product</h5>
                 <Link
                     :href="route('products.index')"
                     class="bg-red-500 text-white px-4 py-2 rounded"
