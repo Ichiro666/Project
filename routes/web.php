@@ -32,6 +32,9 @@ Route::get('/tentang', function () {
 Route::get('/contact', function () {
     return Inertia::render('Member/Contact');
 })->name('contact');
+Route::get('/cart', function () {
+    return Inertia::render('Member/Cart');
+})->name('cart');
 
 
 //Route untuk Admin
