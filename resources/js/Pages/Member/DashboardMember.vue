@@ -74,11 +74,13 @@ const showFullDescription = ref(false);
                     Celana
                 </button>
             </div>
-            <!--Our Popular Items-->
+            <!-- Our Popular Items -->
             <div class="flex px-6 py-3 mt-8">
                 <h1 class="text-xl mb-5 font-semibold">Our Popular Items</h1>
             </div>
-            <div class="flex gap-6 justify-center px-5 py-10 bg-white">
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 py-10 bg-white"
+            >
                 <!-- Produk 1 -->
                 <div
                     class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
@@ -145,88 +147,97 @@ const showFullDescription = ref(false);
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="flex py-6 px-3 justify-center">
-            <button
-                class="mt-5 rounded py-2 px-4 bg-green-700 text-white hover:bg-green-500"
-            >
-                Explore More
-            </button>
-        </div>
-        <!--End Our Popular Items-->
-        <!--Rekomendasi-->
-        <div class="flex px-6 py-3 mt-8">
-            <h1 class="text-xl mb-5 font-semibold">Rekomendasi</h1>
-        </div>
-        <div class="flex gap-6 justify-center px-5 py-10 bg-white">
-            <!-- Produk 1 -->
-            <div
-                class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
-            >
-                <img
-                    src=""
-                    alt="Rok-2"
-                    class="h-64 w-full object-cover rounded-md mb-4"
-                />
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                    Orimoza Rok Span Knit Hornet Wanita Renna
-                </h3>
-                <p class="text-lg text-green-700 font-bold mb-4">Rp96.000</p>
+            <div class="flex py-6 px-3 justify-center">
                 <button
-                    class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    class="mt-5 rounded py-2 px-4 bg-green-700 text-white hover:bg-green-500"
                 >
-                    Checkout
+                    Explore More
                 </button>
             </div>
+            <!-- End Our Popular Items -->
 
-            <!-- Produk 2 -->
-            <div
-                class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
-            >
-                <img
-                    src=""
-                    alt="Rok-2"
-                    class="h-64 w-full object-cover rounded-md mb-4"
-                />
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                    Orimoza Rok Span Knit Hornet Wanita Renna
-                </h3>
-                <p class="text-lg text-green-700 font-bold mb-4">Rp96.000</p>
-                <button
-                    class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                >
-                    Checkout
-                </button>
+            <!-- Rekomendasi -->
+            <div class="flex px-6 py-3 mt-8">
+                <h1 class="text-xl mb-5 font-semibold">Rekomendasi</h1>
             </div>
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 py-10 bg-white"
+            >
+                <!-- Produk 1 -->
+                <div
+                    class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
+                >
+                    <img
+                        src=""
+                        alt="Rok-2"
+                        class="h-64 w-full object-cover rounded-md mb-4"
+                    />
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                        Orimoza Rok Span Knit Hornet Wanita Renna
+                    </h3>
+                    <p class="text-lg text-green-700 font-bold mb-4">
+                        Rp96.000
+                    </p>
+                    <button
+                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    >
+                        Checkout
+                    </button>
+                </div>
 
-            <!-- Produk 3 -->
-            <div
-                class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
-            >
-                <img
-                    src=""
-                    alt="Rok-2"
-                    class="h-64 w-full object-cover rounded-md mb-4"
-                />
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                    Orimoza Rok Span Knit Hornet Wanita Renna
-                </h3>
-                <p class="text-lg text-green-700 font-bold mb-4">Rp96.000</p>
-                <button
-                    class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                <!-- Produk 2 -->
+                <div
+                    class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
                 >
-                    Checkout
+                    <img
+                        src=""
+                        alt="Rok-2"
+                        class="h-64 w-full object-cover rounded-md mb-4"
+                    />
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                        Orimoza Rok Span Knit Hornet Wanita Renna
+                    </h3>
+                    <p class="text-lg text-green-700 font-bold mb-4">
+                        Rp96.000
+                    </p>
+                    <button
+                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    >
+                        Checkout
+                    </button>
+                </div>
+
+                <!-- Produk 3 -->
+                <div
+                    class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
+                >
+                    <img
+                        src=""
+                        alt="Rok-2"
+                        class="h-64 w-full object-cover rounded-md mb-4"
+                    />
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                        Orimoza Rok Span Knit Hornet Wanita Renna
+                    </h3>
+                    <p class="text-lg text-green-700 font-bold mb-4">
+                        Rp96.000
+                    </p>
+                    <button
+                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                    >
+                        Checkout
+                    </button>
+                </div>
+            </div>
+            <div class="flex py-6 px-3 justify-center">
+                <button
+                    class="mt-5 rounded py-2 px-4 bg-green-700 text-white hover:bg-green-500"
+                >
+                    Explore More
                 </button>
             </div>
+            <!-- End Rekomendasi -->
         </div>
-        <div class="flex py-6 px-3 justify-center">
-            <button
-                class="mt-5 rounded py-2 px-4 bg-green-700 text-white hover:bg-green-500"
-            >
-                Explore More
-            </button>
-        </div>
-        <!--End Rekomendasi-->
         <div class="flex px-6 py-3 mt-8">
             <h1 class="text-xl mb-5 font-semibold">Deskripsi Toko</h1>
         </div>

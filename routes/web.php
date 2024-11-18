@@ -17,6 +17,23 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/home', function () {
+    return Inertia::render('Member/DashboardMember');
+})->name('home');
+Route::get('/shop', function () {
+    return Inertia::render('Member/Shop');
+})->name('shop');
+Route::get('/catalog', function () {
+    return Inertia::render('Member/Catalog');
+})->name('catalog');
+Route::get('/tentang', function () {
+    return Inertia::render('Member/Tentang');
+})->name('tentang');
+Route::get('/contact', function () {
+    return Inertia::render('Member/Contact');
+})->name('contact');
+
+
 //Route untuk Admin
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

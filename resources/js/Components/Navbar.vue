@@ -12,7 +12,11 @@ const isLoggedIn = props.auth?.user !== null; // Cek apakah user telah login
         >
             <!-- Bagian Kiri: Logo -->
             <div class="flex items-center pl-4">
-                <img src="" alt="Logo" class="h-8 w-full" />
+                <img
+                    src="../Pages/images/orimoza.png"
+                    alt="Logo"
+                    class="h-8 w-full"
+                />
                 <span class="ml-2 text-2xl font-bold text-black">
                     <b>Orimoza</b>
                 </span>
@@ -20,30 +24,30 @@ const isLoggedIn = props.auth?.user !== null; // Cek apakah user telah login
 
             <!-- Bagian Tengah: Navbar Links -->
             <div class="hidden md:flex space-x-8">
-                <Link
+                <a
                     href="/home"
                     class="text-black hover:text-green-500 text-base"
-                    >Home</Link
+                    >Home</a
                 >
-                <Link
+                <a
                     href="/shop"
                     class="text-black hover:text-green-500 text-base"
-                    >Shop</Link
+                    >Shop</a
                 >
-                <Link
+                <a
                     href="/catalog"
                     class="text-black hover:text-green-500 text-base"
-                    >Catalog</Link
+                    >Catalog</a
                 >
-                <Link
-                    href="/about"
+                <a
+                    href="/tentang"
                     class="text-black hover:text-green-500 text-base"
-                    >About</Link
+                    >About</a
                 >
-                <Link
+                <a
                     href="/contact"
                     class="text-black hover:text-green-500 text-base"
-                    >Contact</Link
+                    >Contact</a
                 >
             </div>
 
@@ -116,7 +120,6 @@ const isLoggedIn = props.auth?.user !== null; // Cek apakah user telah login
                                 d="M20 3h-9c-1.103 0-2 .897-2 2v4h2V5h9v14h-9v-4H9v4c0 1.103.897 2 2 2h9c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2z"
                             ></path>
                         </svg>
-                        <span class="ml-2">Log Out</span>
                     </Link>
                 </template>
             </div>
