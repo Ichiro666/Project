@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\EnsureAdmin;
@@ -52,3 +53,5 @@ require __DIR__.'/auth.php';
 
 //Product
 Route::resource('products', ProductController::class);
+
+Route::resource('customers', CustomerController::class);
