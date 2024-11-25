@@ -102,19 +102,24 @@ const submit = () => {
                 <div class="mt-6 flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
                     <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                    <Link
+                        v-if="canResetPassword"
+                        :href="route('password.request')"
+                        class="text-sm text-indigo-600 hover:text-indigo-800"
+                    >
+                        Forgot your password?
+                    </Link>
                 </div>
 
                 <!-- Forgot Password Link -->
                 <div class="mt-4 flex justify-between items-center">
-                    <div>
-                        <Link
-                            v-if="canResetPassword"
-                            :href="route('password.request')"
-                            class="text-sm text-indigo-600 hover:text-indigo-800"
-                        >
-                            Forgot your password?
-                        </Link>
-                    </div>
+                    <!-- Register Button -->
+                    <Link
+                        :href="route('register')"
+                        class="px-6 py-3 text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition duration-200 ease-in-out mt-4 w-auto"
+                    >
+                        Register
+                    </Link>
 
                     <!-- Submit Button -->
                     <PrimaryButton

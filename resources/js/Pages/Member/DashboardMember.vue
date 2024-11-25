@@ -8,37 +8,36 @@ const showFullDescription = ref(false);
 <template>
     <MemberLayout>
         <div class="w-full overflow-hidden h-full">
-            <div class="flex transition-transform duration-700">
-                <div class="flex-shrink-0 w-full h-[553px]">
+            <div class="flex justify-between items-center relative px-10 pt-10">
+                <!-- Container Gambar -->
+                <div class="relative w-1/2 h-[553px] flex-shrink-0">
+                    <!-- Gambar Herodown -->
                     <img
-                        src=""
-                        alt="Gambar 1"
-                        class="w-full h-full object-cover"
+                        src="../images/Hero/herodown.png"
+                        alt="Gambar Down"
+                        class="absolute top-0 left-0 w-auto h-auto object-cover z-0"
                     />
-                    <div
-                        class="absolute inset-0 flex justify-center items-center"
-                    >
-                        <div class="text-center">
-                            <h1
-                                class="text-4xl md:text-6xl font-bold text-white mb-4"
-                            >
-                                Selamat Datang di Orimoza
-                            </h1>
-                            <p class="text-lg md:text-2xl text-white mb-6">
-                                Temukan fashion terbaru dan terbaik hanya untuk
-                                Anda!
-                            </p>
-                            <router-link to="/shop">
-                                <button
-                                    class="bg-green-700 hover:bg-green-500 text-white font-semibold px-6 py-3 rounded-lg"
-                                >
-                                    Belanja Sekarang
-                                </button>
-                            </router-link>
-                        </div>
-                    </div>
+                    <!-- Gambar Heroup -->
+                    <img
+                        src="../images/Hero/heroup.png"
+                        alt="Gambar Up"
+                        class="absolute top-10 left-10 w-auto h-auto object-cover z-10"
+                    />
+                </div>
+
+                <!-- Container Teks -->
+                <div class="w-1/2 px-8">
+                    <h1 class="text-4xl md:text-6xl font-bold text-black mb-4">
+                        "
+                    </h1>
+                    <p class="text-7xl md:text-2xl text-black">
+                        I place the notion of creativity at the same level
+                        asthat of craftsmanship, but both give way to the human
+                        dimension that is at the heart of my work.
+                    </p>
                 </div>
             </div>
+
             <div class="flex justify-center px-10 py-12">
                 <h1 class="text-xl font-semibold">PRODUCT</h1>
             </div>
@@ -96,11 +95,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Produk 2 -->
@@ -118,11 +131,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Produk 3 -->
@@ -140,11 +167,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
             </div>
             <div class="flex py-6 px-3 justify-center">
@@ -178,11 +219,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Produk 2 -->
@@ -200,11 +255,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
 
                 <!-- Produk 3 -->
@@ -222,11 +291,25 @@ const showFullDescription = ref(false);
                     <p class="text-lg text-green-700 font-bold mb-4">
                         Rp96.000
                     </p>
-                    <button
-                        class="w-full bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
-                    >
-                        Checkout
-                    </button>
+                    <div class="flex justify-between">
+                        <button
+                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                        >
+                            Checkout
+                        </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M21.822 7.431A1 1 0 0 0 21 7H7.333L6.179 4.23A1.994 1.994 0 0 0 4.333 3H2v2h2.333l4.744 11.385A1 1 0 0 0 10 17h8c.417 0 .79-.259.937-.648l3-8a1 1 0 0 0-.115-.921zM17.307 15h-6.64l-2.5-6h11.39l-2.25 6z"
+                            ></path>
+                            <circle cx="10.5" cy="19.5" r="1.5"></circle>
+                            <circle cx="17.5" cy="19.5" r="1.5"></circle>
+                        </svg>
+                    </div>
                 </div>
             </div>
             <div class="flex py-6 px-3 justify-center">

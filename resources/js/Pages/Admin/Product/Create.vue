@@ -7,10 +7,15 @@ const form = useForm({
     name: "",
     category: "",
     price: "",
+    image: null, // Untuk gambar produk
+    description: "", // Untuk deskripsi produk
+    stock: 0, // Untuk stok produk
 });
 
 const saveProduct = () => {
-    const res = form.post(route("products.store"));
+    const res = form.post(route("products.store"), {
+        forceFormData: true, // Mengirimkan data sebagai FormData untuk menghandle file
+    });
     if (res) {
         form.reset();
     }
@@ -102,6 +107,75 @@ const saveProduct = () => {
                         v-if="form.errors.price"
                         class="text-red-500 text-sm mt-1"
                         >{{ form.errors.price }}</span
+                    >
+                </div>
+
+                <!-- Image Field -->
+                <div class="mb-4">
+                    <label
+                        class="block text-gray-700 text-sm font-bold mb-2"
+                        for="image"
+                    >
+                        Image
+                    </label>
+                    <input
+                        @change="(e) => (form.image = e.target.files[0])"
+                        type="file"
+                        id="image"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        accept="image/*"
+                        required
+                    />
+                    <span
+                        v-if="form.errors.image"
+                        class="text-red-500 text-sm mt-1"
+                        >{{ form.errors.image }}</span
+                    >
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-4">
+                    <label
+                        class="block text-gray-700 text-sm font-bold mb-2"
+                        for="description"
+                    >
+                        Description
+                    </label>
+                    <textarea
+                        v-model="form.description"
+                        id="description"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter product description"
+                        rows="4"
+                        required
+                    ></textarea>
+                    <span
+                        v-if="form.errors.description"
+                        class="text-red-500 text-sm mt-1"
+                        >{{ form.errors.description }}</span
+                    >
+                </div>
+
+                <!-- Stock Field -->
+                <div class="mb-4">
+                    <label
+                        class="block text-gray-700 text-sm font-bold mb-2"
+                        for="stock"
+                    >
+                        Stock
+                    </label>
+                    <input
+                        v-model="form.stock"
+                        type="number"
+                        id="stock"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Enter stock quantity"
+                        required
+                    />
+                    <span
+                        v-if="form.errors.stock"
+                        class="text-red-500 text-sm mt-1"
+                        >{{ form.errors.stock }}</span
                     >
                 </div>
 

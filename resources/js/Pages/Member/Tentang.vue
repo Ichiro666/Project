@@ -3,86 +3,113 @@ import MemberLayout from "@/Layouts/MemberLayout.vue";
 </script>
 <template>
     <MemberLayout>
-        <div class="flex justify-center items-center min-h-screen bg-gray-100">
-            <!-- Container Utama -->
-            <div class="px-6 py-10 bg-white max-w-4xl w-full mx-auto">
-                <!-- Tentang Kami -->
-                <section class="mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-green-600 mb-6">
-                        Tentang Kami
-                    </h2>
-                    <p
-                        class="text-brown-700 leading-relaxed text-lg max-w-3xl mx-auto"
-                    >
-                        Orimoza adalah perusahaan yang bergerak di bidang
-                        e-commerce fashion, menghadirkan produk berkualitas
-                        dengan desain menarik untuk memenuhi kebutuhan mode
-                        pelanggan kami.
-                    </p>
-                </section>
+        <section class="flex flex-col w-full mt-16 justify-center">
+            <div class="w-[100%] px-16 mx-auto py-16">
+                <img
+                    class="w-full rounded-lg shadow-2xl"
+                    src="../images/Hero/oriori.jpg"
+                />
+                <div class="absolute bg-cover bg-left-top">
+                    <img
+                        class="scale-[90%] -translate-y-20 shadow-lg translate-x-10 rounded-md"
+                        src="../images/Hero/orimoz-about.jpeg"
+                    />
+                </div>
+            </div>
 
-                <!-- Visi dan Misi -->
-                <section class="mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-green-600 mb-6">
-                        Visi dan Misi
-                    </h2>
-                    <div class="mb-4">
-                        <h3 class="text-xl font-semibold text-green-500">
-                            Visi
-                        </h3>
-                        <p class="text-brown-700 text-lg">
-                            Menjadi merek fashion terdepan yang menginspirasi
-                            gaya dan kualitas hidup pelanggan kami di seluruh
-                            Indonesia.
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-green-500">
-                            Misi
-                        </h3>
-                        <ul
-                            class="list-disc pl-6 text-brown-700 text-lg inline-block text-left"
-                        >
-                            <li>
-                                Menyediakan produk fashion yang inovatif dan
-                                berkualitas tinggi.
+            <div
+                class="w-[80%] bg-teal-600 mx-auto p-10 mt-20 rounded-md shadow-xl"
+            >
+                <div class="flex justify-center items-center px-16">
+                    <ul>
+                        <li class="text-4xl font-bold text-center">About Us</li>
+                        <li class="text-lg font-medium text-justify mt-4">
+                            Orimoza adalah perusahaan retail yang berbasis di
+                            Solo, Jawa Tengah, dengan fokus pada kebutuhan
+                            sehari-hari dan produk gaya hidup. Orimoza
+                            berkomitmen untuk memberikan pengalaman belanja yang
+                            nyaman dan produk berkualitas dengan harga
+                            terjangkau. Kami memiliki tiga cabang utama yang
+                            tersebar di wilayah Karanganyar, Sragen, dan
+                            Sukoharjo, menjangkau pelanggan dari berbagai
+                            kalangan.
+                        </li>
+                        <li class="text-lg font-medium text-justify mt-4">
+                            Kami memiliki visi, yakni Menjadi pelopor retail
+                            modern di Jawa Tengah yang mengutamakan kepuasan
+                            pelanggan dan inovasi dalam layanan.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="w-full bg-teal-600 rounded-md shadow-xl mt-20">
+                <div class="flex justify-center items-center p-16 gap-16">
+                    <div class="mx-auto">
+                        <ul>
+                            <li class="text-3xl font-bold">Misi Kami :</li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Memberikan produk berkualitas dengan harga
+                                kompetitif.
                             </li>
-                            <li>
-                                Membangun hubungan yang kuat dan berkelanjutan
-                                dengan pelanggan.
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Memperluas jangkauan pelayanan untuk memenuhi
+                                kebutuhan masyarakat loka
                             </li>
-                            <li>
-                                Mendukung keberlanjutan dan etika dalam setiap
-                                tahap produksi kami.
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Mengedepankan teknologi dalam proses operasional
+                                dan pengalaman pelanggan.
+                            </li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Membangun hubungan yang kuat dengan mitra lokal
+                                untuk mendukung pertumbuhan ekonomi daerah.
                             </li>
                         </ul>
                     </div>
-                </section>
-
-                <!-- Informasi Kontak -->
-                <section class="mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-green-600 mb-6">
-                        Informasi Kontak
-                    </h2>
-                    <p class="text-brown-700 text-lg mb-4">
-                        <strong>Alamat:</strong> Jl. Fashion No. 123, Jakarta
-                    </p>
-                    <p class="text-brown-700 text-lg mb-4">
-                        <strong>Email:</strong> support@orimoza.com
-                    </p>
-                    <p class="text-brown-700 text-lg mb-4">
-                        <strong>Telepon:</strong> +62 812 3456 7890
-                    </p>
-                    <div class="flex justify-center">
-                        <a
-                            href="mailto:support@orimoza.com"
-                            class="inline-block bg-brown-700 text-green-700 py-2 px-6 rounded-lg shadow-md hover:bg-brown-800 transition duration-300"
-                        >
-                            Hubungi Kami
-                        </a>
+                    <div
+                        class="shrink-0 w-px border justify-center items-center border-solid mx-16 opacity-40 bg-zinc-500 border-zinc-500 h-[310px]"
+                    ></div>
+                    <div class="mx-auto">
+                        <ul>
+                            <li class="text-3xl font-bold">
+                                Nilai-nilai Kami :
+                            </li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Kualitas: Mengutamakan standar tinggi untuk
+                                semua produk.
+                            </li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Pelayanan: Memberikan pengalaman belanja yang
+                                ramah dan nyaman.
+                            </li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Inovasi: Menerapkan teknologi terbaru untuk
+                                efisiensi dan kepuasan pelanggan.
+                            </li>
+                            <li
+                                class="list-disc text-lg font-medium text-justify mt-4"
+                            >
+                                Komunitas: Berkontribusi pada pertumbuhan dan
+                                kesejahteraan masyarakat sekitar.
+                            </li>
+                        </ul>
                     </div>
-                </section>
+                </div>
             </div>
-        </div>
+        </section>
     </MemberLayout>
 </template>

@@ -36,6 +36,9 @@ Route::get('/contact', function () {
 Route::get('/cart', function () {
     return Inertia::render('Member/Cart');
 })->name('cart');
+Route::get('/checkout', function () {
+    return Inertia::render('Member/Checkout');
+})->name('checkout');
 
 
 //Route untuk Admin
