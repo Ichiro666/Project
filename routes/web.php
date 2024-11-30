@@ -52,6 +52,9 @@ Route::get('/order', function () {
 Route::get('/info', function () {
     return Inertia::render('Member/Info');
 })->name('info');
+Route::get('/checkout', function () {
+    return Inertia::render('Member/Checkout');
+})->name('checkout');
 Route::get('/detail/{id}', function ($id) {
     return Inertia::render('Member/DetailProduct', [
         'product' => Product::findOrFail($id)
