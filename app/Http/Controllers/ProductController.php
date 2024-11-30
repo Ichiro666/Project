@@ -2,99 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $products = Product::get();
-        return Inertia::render('Admin/Product/Index',[
-            'products' => $products
+        return Inertia::render('Admin/Product/Index', [
+            'products' => Product::latest()->get()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        // Form untuk membuat produk baru
         return Inertia::render('Admin/Product/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Validasi dan simpan produk baru
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        Product::create([
-            'name' => $request->name,
-            'category' => $request->category,
-            'price' => $request->price,
-        ]);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            
+            $product = Product::create([
+                'name' => $validated['name'],
+                'category' => $validated['category'],
+                'price' => $validated['price'],
+                'description' => $validated['description'] ?? null,
+                'image' => $imagePath
+            ]);
 
-        return redirect()->to('/products')->with('message', 'Product created successfully.');
+            return redirect()->route('products.index')
+                           ->with('success', 'Product created successfully');
+        }
+
+        return back()->with('error', 'Failed to upload image');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        return Inertia::render('Admin/Product/Show',[
-            'product' => $product
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Product $product)
     {
-        return Inertia::render('Admin/Product/Edit',[
+        return Inertia::render('Admin/Product/Edit', [
             'product' => $product
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        $product->create([
-            'name' => $request->name,
-            'category' => $request->category,
-            'price' => $request->price,
-        ]);
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            
+            $imagePath = $request->file('image')->store('products', 'public');
+            $validated['image'] = $imagePath;
+        }
 
-        return redirect()->to('/products')->with('message', 'Product updated successfully.');
+        $product->update($validated);
+
+        return redirect()->route('products.index')
+                        ->with('success', 'Product updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Product $product)
     {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+        
         $product->delete();
-        return redirect()->to('/products')->with('message','Product Deleted Successfully');
+
+        return redirect()->route('products.index')
+                        ->with('success', 'Product deleted successfully');
+    }
+
+    public function show(Product $product)
+    {
+        return Inertia::render('Admin/Product/Show', [
+            'product' => $product
+        ]);
     }
 }

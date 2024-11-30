@@ -1,126 +1,61 @@
+<!-- resources/js/Pages/Member/Cart.vue -->
 <script setup>
 import MemberLayout from "@/Layouts/MemberLayout.vue";
+import { useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+
+const cartItems = ref([]);
+const form = useForm({
+    items: [],
+    payment_method: "",
+    shipping_address: "",
+});
+
+const checkout = () => {
+    form.items = cartItems.value.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        size: item.size,
+    }));
+
+    form.post(route("orders.store"), {
+        onSuccess: () => {
+            // Clear cart after successful checkout
+            cartItems.value = [];
+            localStorage.removeItem("cart");
+        },
+    });
+};
 </script>
 
 <template>
     <MemberLayout>
         <div class="container mx-auto px-4 py-8">
-            <h2 class="text-2xl font-bold text-center mb-6">Your Cart</h2>
+            <h1 class="text-2xl font-bold mb-6">Shopping Cart</h1>
 
             <!-- Cart Items -->
-            <div class="bg-white shadow-lg p-6 rounded-lg space-y-6">
-                <!-- Cart Item 1 -->
+            <div v-if="cartItems.length > 0">
                 <div
-                    class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
+                    v-for="item in cartItems"
+                    :key="item.id"
+                    class="mb-4 p-4 border rounded"
                 >
-                    <div class="flex items-center space-x-4">
-                        <img
-                            src="../images/Blouse/Blouse1.png"
-                            alt="Product 1"
-                            class="w-24 h-24 object-cover rounded-md"
-                        />
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">
-                                Blouse Red
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                <span class="font-semibold">Size:</span> M |
-                                <span class="font-semibold">Color:</span> Red
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <button
-                                class="bg-gray-300 text-gray-800 px-3 py-2 rounded-md hover:bg-gray-400 transition"
-                                aria-label="Decrease Quantity"
-                            >
-                                -
-                            </button>
-                            <span class="text-gray-800 font-medium">1</span>
-                            <button
-                                class="bg-gray-300 text-gray-800 px-3 py-2 rounded-md hover:bg-gray-400 transition"
-                                aria-label="Increase Quantity"
-                            >
-                                +
-                            </button>
-                        </div>
-                        <span class="text-gray-800 font-semibold">$30.00</span>
-                        <button
-                            class="text-red-500 font-semibold hover:underline transition"
-                            aria-label="Remove Product"
-                        >
-                            Remove
-                        </button>
-                    </div>
+                    <!-- Cart item display -->
                 </div>
 
-                <!-- Cart Item 2 -->
-                <div
-                    class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
-                >
-                    <div class="flex items-center space-x-4">
-                        <img
-                            src="../images/Blouse/Blouse2.png"
-                            alt="Product 2"
-                            class="w-24 h-24 object-cover rounded-md"
-                        />
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800">
-                                Blouse Blue
-                            </h3>
-                            <p class="text-gray-600 text-sm">
-                                <span class="font-semibold">Size:</span> L |
-                                <span class="font-semibold">Color:</span> Blue
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <button
-                                class="bg-gray-300 text-gray-800 px-3 py-2 rounded-md hover:bg-gray-400 transition"
-                                aria-label="Decrease Quantity"
-                            >
-                                -
-                            </button>
-                            <span class="text-gray-800 font-medium">2</span>
-                            <button
-                                class="bg-gray-300 text-gray-800 px-3 py-2 rounded-md hover:bg-gray-400 transition"
-                                aria-label="Increase Quantity"
-                            >
-                                +
-                            </button>
-                        </div>
-                        <span class="text-gray-800 font-semibold">$45.00</span>
-                        <button
-                            class="text-red-500 font-semibold hover:underline transition"
-                            aria-label="Remove Product"
-                        >
-                            Remove
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Total Price Section -->
-                <div
-                    class="flex items-center justify-between bg-gray-100 shadow-md p-4 rounded-lg"
-                >
-                    <h3 class="text-xl font-semibold text-gray-800">Total</h3>
-                    <span class="text-2xl font-bold text-green-600"
-                        >$120.00</span
-                    >
-                </div>
-
-                <!-- Checkout Button -->
-                <div class="mt-6 flex justify-center">
+                <!-- Checkout Form -->
+                <form @submit.prevent="checkout" class="mt-8">
+                    <!-- Payment and shipping inputs -->
                     <button
-                        href="/checkout"
-                        class="bg-green-500 text-white py-3 px-8 rounded-lg shadow-lg hover:bg-green-600 transition text-lg font-semibold"
+                        type="submit"
+                        class="bg-green-600 text-white px-6 py-2 rounded"
                     >
                         Proceed to Checkout
                     </button>
-                </div>
+                </form>
             </div>
+
+            <div v-else class="text-center py-8">Your cart is empty</div>
         </div>
     </MemberLayout>
 </template>

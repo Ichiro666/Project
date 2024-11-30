@@ -2,92 +2,234 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 
-// Contoh data statistik penjualan (bisa diganti dengan data API atau props)
+// Sample statistics data (replace with actual API data)
 const statistics = {
     totalSales: 1234,
-    totalRevenue: 56000, // dalam dolar atau sesuai satuan
+    totalRevenue: 56000000,
     totalCustomers: 345,
-    totalProductsSold: 789,
+    totalProducts: 789,
+    recentOrders: [
+        { id: 1, customer: "John Doe", amount: 250000, status: "Completed" },
+        { id: 2, customer: "Jane Smith", amount: 175000, status: "Processing" },
+        // Add more orders as needed
+    ],
 };
 </script>
 
 <template>
     <Head title="Admin Dashboard" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Admin Dashboard
-            </h2>
-        </template>
+        <div class="p-8">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Dashboard Overview
+                </h1>
+                <p class="text-gray-600">Welcome to your admin dashboard</p>
+            </div>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <!-- Statistik Penjualan -->
-                <div
-                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
-                >
-                    <!-- Total Penjualan -->
-                    <div
-                        class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 text-center"
-                    >
-                        <h3 class="text-gray-600 font-semibold text-lg">
-                            Total Penjualan
-                        </h3>
-                        <p class="text-2xl font-bold text-gray-800 mt-2">
-                            {{ statistics.totalSales }}
-                        </p>
-                    </div>
-
-                    <!-- Total Pendapatan -->
-                    <div
-                        class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 text-center"
-                    >
-                        <h3 class="text-gray-600 font-semibold text-lg">
-                            Total Pendapatan
-                        </h3>
-                        <p class="text-2xl font-bold text-green-500 mt-2">
-                            ${{ statistics.totalRevenue }}
-                        </p>
-                    </div>
-
-                    <!-- Total Pelanggan -->
-                    <div
-                        class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 text-center"
-                    >
-                        <h3 class="text-gray-600 font-semibold text-lg">
-                            Total Pelanggan
-                        </h3>
-                        <p class="text-2xl font-bold text-blue-500 mt-2">
-                            {{ statistics.totalCustomers }}
-                        </p>
-                    </div>
-
-                    <!-- Total Produk Terjual -->
-                    <div
-                        class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 text-center"
-                    >
-                        <h3 class="text-gray-600 font-semibold text-lg">
-                            Total Produk Terjual
-                        </h3>
-                        <p class="text-2xl font-bold text-purple-500 mt-2">
-                            {{ statistics.totalProductsSold }}
-                        </p>
+            <!-- Statistics Cards -->
+            <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            >
+                <!-- Total Sales Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">
+                                Total Sales
+                            </p>
+                            <h3 class="text-2xl font-bold text-gray-800">
+                                {{ statistics.totalSales }}
+                            </h3>
+                            <p class="text-xs text-green-600 mt-2">
+                                +12.5% from last month
+                            </p>
+                        </div>
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <svg
+                                class="w-6 h-6 text-green-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Grafik atau Diagram (Placeholder) -->
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg mt-8 p-6"
-                >
-                    <h3 class="text-gray-600 font-semibold text-lg mb-4">
-                        Grafik Penjualan Bulanan
-                    </h3>
-                    <div
-                        class="h-64 bg-gray-200 flex items-center justify-center"
-                    >
-                        <span class="text-gray-500">[Grafik Placeholder]</span>
+                <!-- Total Revenue Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">
+                                Total Revenue
+                            </p>
+                            <h3 class="text-2xl font-bold text-gray-800">
+                                Rp{{ statistics.totalRevenue.toLocaleString() }}
+                            </h3>
+                            <p class="text-xs text-green-600 mt-2">
+                                +8.2% from last month
+                            </p>
+                        </div>
+                        <div class="p-3 bg-blue-100 rounded-full">
+                            <svg
+                                class="w-6 h-6 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
+                        </div>
                     </div>
+                </div>
+
+                <!-- Total Customers Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">
+                                Total Customers
+                            </p>
+                            <h3 class="text-2xl font-bold text-gray-800">
+                                {{ statistics.totalCustomers }}
+                            </h3>
+                            <p class="text-xs text-green-600 mt-2">
+                                +5.1% from last month
+                            </p>
+                        </div>
+                        <div class="p-3 bg-purple-100 rounded-full">
+                            <svg
+                                class="w-6 h-6 text-purple-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Products Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600 mb-1">
+                                Total Products
+                            </p>
+                            <h3 class="text-2xl font-bold text-gray-800">
+                                {{ statistics.totalProducts }}
+                            </h3>
+                            <p class="text-xs text-green-600 mt-2">
+                                +3.7% from last month
+                            </p>
+                        </div>
+                        <div class="p-3 bg-yellow-100 rounded-full">
+                            <svg
+                                class="w-6 h-6 text-yellow-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Table -->
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        Recent Orders
+                    </h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
+                                    Order ID
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
+                                    Customer
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
+                                    Amount
+                                </th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr
+                                v-for="order in statistics.recentOrders"
+                                :key="order.id"
+                            >
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    #{{ order.id }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    {{ order.customer }}
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                                >
+                                    Rp{{ order.amount.toLocaleString() }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span
+                                        :class="{
+                                            'px-2 py-1 text-xs font-medium rounded-full': true,
+                                            'bg-green-100 text-green-800':
+                                                order.status === 'Completed',
+                                            'bg-yellow-100 text-yellow-800':
+                                                order.status === 'Processing',
+                                        }"
+                                    >
+                                        {{ order.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
