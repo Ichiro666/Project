@@ -4,13 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Product;
 
 class CartController extends Controller
 {
     public function index()
     {
         // Get cart items from session
-        $cartItems = session()->get('cart', []);
+        $cart = session()->get('cart', []);
+    
+        // Get product details for each cart item
+        $cartItems = [];
+        foreach ($cart as $key => $item) {
+            $product = Product::find($item['product_id']);
+            if ($product) {
+                $cartItems[] = [
+                    'key' => $key,
+                    'product' => $product,
+                    'quantity' => $item['quantity'],
+                    'size' => $item['size']
+                ];
+            }
+        }
         
         return Inertia::render('Member/Cart', [
             'cartItems' => $cartItems

@@ -10,7 +10,6 @@ const toggleSidebar = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value;
 };
 </script>
-
 <template>
     <div class="flex min-h-screen">
         <!-- Sidebar -->
@@ -19,44 +18,50 @@ const toggleSidebar = () => {
             <div class="p-4 border-b">
                 <Link :href="route('dashboard')" class="flex items-center">
                     <ApplicationLogo class="w-8 h-8" />
-                    <span class="ml-3 text-xl font-semibold text-gray-800"
-                        >Admin Dashboard</span
-                    >
+                    <span class="ml-3 text-xl font-semibold text-gray-800">
+                        Admin Dashboard
+                    </span>
                 </Link>
             </div>
+
             <!-- Navigation Menu -->
             <nav class="p-4 space-y-2">
                 <!-- Dashboard Link -->
                 <NavLink
                     :href="route('dashboard')"
                     :active="route().current('dashboard')"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    class="nav-link"
                     :class="{ 'bg-gray-100': route().current('dashboard') }"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 mr-3"
+                        class="nav-icon"
                         viewBox="0 0 24 24"
-                        fill="currentColor"
+                        fill="none"
+                        stroke="currentColor"
                     >
                         <path
-                            d="M3 6a3 3 0 013-3h2.25a3 3 0 013 3v2.25a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm9.75 0a3 3 0 013-3H18a3 3 0 013 3v2.25a3 3 0 01-3 3h-2.25a3 3 0 01-3-3V6zM3 15.75a3 3 0 013-3h2.25a3 3 0 013 3V18a3 3 0 01-3 3H6a3 3 0 01-3-3v-2.25zm9.75 0a3 3 0 013-3H18a3 3 0 013 3V18a3 3 0 01-3 3h-2.25a3 3 0 01-3-3v-2.25z"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                         />
                     </svg>
                     <span class="font-medium">Dashboard</span>
                 </NavLink>
+
                 <!-- Products Link -->
                 <NavLink
                     :href="route('products.index')"
                     :active="route().current('products.index')"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    class="nav-link"
                     :class="{
                         'bg-gray-100': route().current('products.index'),
                     }"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 mr-3"
+                        class="nav-icon"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
@@ -70,47 +75,83 @@ const toggleSidebar = () => {
                     <span class="font-medium">Products</span>
                 </NavLink>
 
+                <!-- Orders Link -->
+                <NavLink
+                    :href="route('admin.orders.index')"
+                    :active="route().current('admin.orders.index')"
+                    class="nav-link"
+                    :class="{
+                        'bg-gray-100': route().current('admin.orders.index'),
+                    }"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="nav-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                        />
+                    </svg>
+                    <span class="font-medium">Orders</span>
+                </NavLink>
+
                 <!-- Customers Link -->
                 <NavLink
                     :href="route('customers.index')"
                     :active="route().current('customers.index')"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    class="nav-link"
                     :class="{
                         'bg-gray-100': route().current('customers.index'),
                     }"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 mr-3"
+                        class="nav-icon"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                     >
                         <path
-                            d="M4.5 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM14.25 8.625a3.375 3.375 0 116.75 0 3.375 3.375 0 01-6.75 0zM1.5 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM17.25 19.128l-.001.144a2.25 2.25 0 01-.233.96 10.088 10.088 0 005.06-1.01.75.75 0 00.42-.643 4.875 4.875 0 00-6.957-4.611 8.586 8.586 0 011.71 5.157v.003z"
+                            fill-rule="evenodd"
+                            d="M8 11a4 4 0 100-8 4 4 0 000 8zm0-2a2 2 0 100-4 2 2 0 000 4z"
+                            clip-rule="evenodd"
+                        />
+                        <path
+                            d="M11 14a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z"
                         />
                     </svg>
                     <span class="font-medium">Customers</span>
                 </NavLink>
-                <!-- Profile Section -->
+
+                <!-- Profile Link -->
                 <NavLink
                     :href="route('profile.edit')"
                     :active="route().current('profile.edit')"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    class="nav-link mt-4"
+                    :class="{ 'bg-gray-100': route().current('profile.edit') }"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 mr-3"
-                        fill="currentColor"
+                        class="nav-icon"
                         viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
                     >
                         <path
-                            fill-rule="evenodd"
-                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                            clip-rule="evenodd"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                         />
                     </svg>
                     <span class="font-medium">Profile</span>
                 </NavLink>
+
                 <!-- Logout Button -->
                 <Link
                     :href="route('logout')"
@@ -136,21 +177,18 @@ const toggleSidebar = () => {
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1">
-            <!-- Page Heading -->
-            <header
-                class="bg-white shadow ml-64 flex-1 p-4"
-                v-if="$slots.header"
-            >
-                <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    <slot name="header" />
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <main class="ml-64 flex-1 p-4">
-                <slot />
-            </main>
+        <div class="ml-64 flex-1">
+            <slot />
         </div>
     </div>
 </template>
+
+<style scoped>
+.nav-link {
+    @apply flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors;
+}
+
+.nav-icon {
+    @apply w-5 h-5 mr-3;
+}
+</style>

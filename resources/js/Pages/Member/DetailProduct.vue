@@ -10,6 +10,15 @@ const props = defineProps({
     },
 });
 
+// Available sizes with stock information
+const availableSizes = [
+    { name: "S", label: "Small", inStock: true },
+    { name: "M", label: "Medium", inStock: true },
+    { name: "L", label: "Large", inStock: true },
+    { name: "XL", label: "Extra Large", inStock: true },
+    { name: "XXL", label: "Double XL", inStock: true },
+];
+
 const selectedSize = ref("");
 const form = useForm({
     product_id: props.product?.id,
@@ -56,18 +65,43 @@ const addToCart = () => {
                         {{ product.name }}
                     </h1>
 
+                    <!-- Rating -->
+                    <div class="flex items-center space-x-2">
+                        <div class="flex">
+                            <template v-for="i in 5" :key="i">
+                                <svg
+                                    class="w-5 h-5"
+                                    :class="
+                                        i <= (product.rating || 0)
+                                            ? 'text-yellow-400'
+                                            : 'text-gray-300'
+                                    "
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                    />
+                                </svg>
+                            </template>
+                        </div>
+                        <span class="text-sm text-gray-600">
+                            {{
+                                product.rating
+                                    ? `${product.rating.toFixed(1)} / 5.0`
+                                    : "No ratings yet"
+                            }}
+                        </span>
+                        <span class="text-sm text-gray-500">
+                            ({{ product.reviews_count || 0 }} reviews)
+                        </span>
+                    </div>
+
                     <!-- Price -->
                     <div class="text-2xl font-bold text-green-600">
                         Rp{{ product.price?.toLocaleString() }}
                     </div>
-
-                    <!-- Size Guide Button -->
-                    <button
-                        @click="showSizeGuide = true"
-                        class="text-sm text-green-600 hover:text-green-700 underline"
-                    >
-                        View Size Guide
-                    </button>
 
                     <!-- Size Selection -->
                     <div class="space-y-3">
@@ -105,16 +139,17 @@ const addToCart = () => {
                         </div>
                     </div>
 
-                    <!-- Size Information -->
-                    <div class="text-sm text-gray-500">
-                        <p>Size Guide:</p>
-                        <ul class="list-disc ml-5 mt-2">
-                            <li>S: Bust 86-90cm, Length 65cm</li>
-                            <li>M: Bust 90-94cm, Length 66cm</li>
-                            <li>L: Bust 94-98cm, Length 67cm</li>
-                            <li>XL: Bust 98-102cm, Length 68cm</li>
-                            <li>XXL: Bust 102-106cm, Length 69cm</li>
-                        </ul>
+                    <!-- Description -->
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-medium text-gray-900">
+                            Description
+                        </h3>
+                        <p class="text-gray-600">
+                            {{
+                                product.description ||
+                                "No description available"
+                            }}
+                        </p>
                     </div>
 
                     <!-- Add to Cart Button -->

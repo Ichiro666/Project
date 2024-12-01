@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Add this relationship method
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

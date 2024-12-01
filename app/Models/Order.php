@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
+    protected $table = 'order';
     protected $fillable = [
         'user_id',
         'order_number',
@@ -26,4 +27,8 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function ratings()
+{
+    return $this->hasMany(Rating::class);
+}
 }

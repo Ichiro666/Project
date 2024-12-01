@@ -3,17 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 
 // Sample statistics data (replace with actual API data)
-const statistics = {
-    totalSales: 1234,
-    totalRevenue: 56000000,
-    totalCustomers: 345,
-    totalProducts: 789,
-    recentOrders: [
-        { id: 1, customer: "John Doe", amount: 250000, status: "Completed" },
-        { id: 2, customer: "Jane Smith", amount: 175000, status: "Processing" },
-        // Add more orders as needed
-    ],
-};
+defineProps({
+    statistics: Object,
+});
 </script>
 
 <template>
@@ -42,9 +34,6 @@ const statistics = {
                             <h3 class="text-2xl font-bold text-gray-800">
                                 {{ statistics.totalSales }}
                             </h3>
-                            <p class="text-xs text-green-600 mt-2">
-                                +12.5% from last month
-                            </p>
                         </div>
                         <div class="p-3 bg-green-100 rounded-full">
                             <svg
@@ -74,9 +63,6 @@ const statistics = {
                             <h3 class="text-2xl font-bold text-gray-800">
                                 Rp{{ statistics.totalRevenue.toLocaleString() }}
                             </h3>
-                            <p class="text-xs text-green-600 mt-2">
-                                +8.2% from last month
-                            </p>
                         </div>
                         <div class="p-3 bg-blue-100 rounded-full">
                             <svg
@@ -106,9 +92,6 @@ const statistics = {
                             <h3 class="text-2xl font-bold text-gray-800">
                                 {{ statistics.totalCustomers }}
                             </h3>
-                            <p class="text-xs text-green-600 mt-2">
-                                +5.1% from last month
-                            </p>
                         </div>
                         <div class="p-3 bg-purple-100 rounded-full">
                             <svg
@@ -138,9 +121,6 @@ const statistics = {
                             <h3 class="text-2xl font-bold text-gray-800">
                                 {{ statistics.totalProducts }}
                             </h3>
-                            <p class="text-xs text-green-600 mt-2">
-                                +3.7% from last month
-                            </p>
                         </div>
                         <div class="p-3 bg-yellow-100 rounded-full">
                             <svg
@@ -202,7 +182,7 @@ const statistics = {
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                                 >
-                                    #{{ order.id }}
+                                    {{ order.id }}
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
@@ -219,9 +199,13 @@ const statistics = {
                                         :class="{
                                             'px-2 py-1 text-xs font-medium rounded-full': true,
                                             'bg-green-100 text-green-800':
-                                                order.status === 'Completed',
+                                                order.status === 'completed',
                                             'bg-yellow-100 text-yellow-800':
-                                                order.status === 'Processing',
+                                                order.status === 'pending',
+                                            'bg-blue-100 text-blue-800':
+                                                order.status === 'processing',
+                                            'bg-red-100 text-red-800':
+                                                order.status === 'cancelled',
                                         }"
                                     >
                                         {{ order.status }}
