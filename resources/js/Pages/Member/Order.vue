@@ -14,6 +14,7 @@ const props = defineProps({
 const form = useForm({});
 const ratingForm = useForm({
     rating: 0,
+    review: "",
     product_id: null,
     order_id: null,
 });
@@ -25,8 +26,13 @@ const setActiveTab = (tab) => {
     activeTab.value = tab;
 };
 
+const hasRated = (item) => {
+    return item && item.rating !== undefined && item?.rating !== null;
+};
+
 const openRatingModal = (orderId, productId) => {
     ratingForm.rating = 0;
+    ratingForm.review = "";
     ratingForm.order_id = orderId;
     ratingForm.product_id = productId;
     showRatingModal.value = true;
@@ -240,46 +246,48 @@ const getStatusBadgeClass = (status) => {
                                 </div>
                             </div>
                             <!-- Add Rating Button for Completed Orders -->
-                            <div
-                                v-if="
-                                    order.status === 'completed' &&
-                                    !item.has_rated
-                                "
-                            >
-                                <button
-                                    @click="
-                                        openRatingModal(
-                                            order.id,
-                                            item.product.id
-                                        )
-                                    "
-                                    class="px-4 py-2 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                                >
-                                    Rate Product
-                                </button>
-                            </div>
-                            <div
-                                v-else-if="item.has_rated"
-                                class="flex items-center"
-                            >
-                                <div class="flex text-yellow-400">
-                                    <template v-for="i in 5" :key="i">
-                                        <svg
-                                            class="w-5 h-5"
-                                            :class="
-                                                i <= item.rating
-                                                    ? 'text-yellow-400'
-                                                    : 'text-gray-300'
-                                            "
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                                            />
-                                        </svg>
-                                    </template>
+                            <div v-if="order.status === 'completed'">
+                                <div v-if="!hasRated(item)">
+                                    <button
+                                        @click="
+                                            openRatingModal(
+                                                order.id,
+                                                item.product.id
+                                            )
+                                        "
+                                        class="px-4 py-2 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+                                    >
+                                        Rate Product
+                                    </button>
+                                </div>
+                                <div v-else class="flex flex-col">
+                                    <div class="flex items-center">
+                                        <div class="flex text-yellow-400">
+                                            <template v-for="i in 5" :key="i">
+                                                <svg
+                                                    class="w-5 h-5"
+                                                    :class="
+                                                        i <= item.rating
+                                                            ? 'text-yellow-400'
+                                                            : 'text-gray-300'
+                                                    "
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                                    />
+                                                </svg>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <p
+                                        v-if="item.review"
+                                        class="text-sm text-gray-600 mt-2"
+                                    >
+                                        {{ item.review }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -299,8 +307,10 @@ const getStatusBadgeClass = (status) => {
                                 class="relative bg-white rounded-lg p-8 max-w-md w-full"
                             >
                                 <h3 class="text-lg font-medium mb-4">
-                                    Rate this product
+                                    Rate & Review Product
                                 </h3>
+
+                                <!-- Star Rating -->
                                 <div class="flex justify-center space-x-2 mb-6">
                                     <template v-for="i in 5" :key="i">
                                         <button
@@ -325,6 +335,23 @@ const getStatusBadgeClass = (status) => {
                                         </button>
                                     </template>
                                 </div>
+
+                                <!-- Review Text Area -->
+                                <div class="mb-6">
+                                    <label
+                                        class="block text-sm font-medium text-gray-700 mb-2"
+                                    >
+                                        Your Review
+                                    </label>
+                                    <textarea
+                                        v-model="ratingForm.review"
+                                        rows="4"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+                                        placeholder="Write your review here..."
+                                    ></textarea>
+                                </div>
+
+                                <!-- Buttons -->
                                 <div class="flex justify-end space-x-4">
                                     <button
                                         @click="showRatingModal = false"
@@ -337,11 +364,45 @@ const getStatusBadgeClass = (status) => {
                                         class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
                                         :disabled="!ratingForm.rating"
                                     >
-                                        Submit Rating
+                                        Submit Review
                                     </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Display reviews in the order items section -->
+                    <div v-if="hasRated(item)" class="flex flex-col">
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400">
+                                <template v-for="i in 5" :key="i">
+                                    <svg
+                                        class="w-5 h-5"
+                                        :class="
+                                            i <= item.rating
+                                                ? 'text-yellow-400'
+                                                : 'text-gray-300'
+                                        "
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                        />
+                                    </svg>
+                                </template>
+                            </div>
+                            <span class="text-sm text-gray-600 ml-2"
+                                >{{ item.rating }}/5</span
+                            >
+                        </div>
+                        <p
+                            v-if="item.review"
+                            class="text-sm text-gray-600 mt-2"
+                        >
+                            {{ item.review }}
+                        </p>
                     </div>
 
                     <!-- Empty State -->

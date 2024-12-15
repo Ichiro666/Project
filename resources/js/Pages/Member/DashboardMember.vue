@@ -31,15 +31,23 @@ const recommendedItems = computed(() => {
     if (!props.products) return [];
 
     return [...props.products]
-        .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+        .sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
         .slice(0, 3); // Ambil 3 produk dengan rating tertinggi
 });
 
+// Format rating function
+const formatRating = (rating) => {
+    const numRating = Number(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+};
+
 const showFullDescription = ref(false);
 </script>
+
 <template>
     <MemberLayout>
         <div class="w-full overflow-hidden h-full">
+            <!-- Hero Section -->
             <div class="flex justify-between items-center relative px-10 pt-10">
                 <!-- Container Gambar -->
                 <div class="relative w-1/2 h-[553px] flex-shrink-0">
@@ -70,23 +78,20 @@ const showFullDescription = ref(false);
                 </div>
             </div>
 
-            <!-- ... previous template code ... -->
-
+            <!-- Categories Section -->
             <div class="flex justify-center px-10 py-12">
-                <h1 class="text-xl font-semibold">PRODUCT</h1>
+                <div class="flex space-x-4">
+                    <Link
+                        v-for="category in categories"
+                        :key="category.id"
+                        :href="route('catalog', { category: category.id })"
+                        class="px-6 py-3 bg-gray-100 rounded-lg text-gray-700 hover:bg-green-500 hover:text-white transition-colors"
+                    >
+                        {{ category.name }}
+                    </Link>
+                </div>
             </div>
 
-            <!-- Product Categories -->
-            <div class="flex justify-center gap-4 mb-10 flex-wrap">
-                <Link
-                    v-for="category in categories"
-                    :key="category.id"
-                    :href="route('catalog', { category: category.id })"
-                    class="bg-green-700 hover:bg-green-500 text-white font-semibold px-8 py-3 rounded-full transition-colors duration-300 shadow-md hover:shadow-lg"
-                >
-                    {{ category.name }}
-                </Link>
-            </div>
             <!-- Our Popular Items Section -->
             <div class="flex px-6 py-3 mt-8">
                 <h1 class="text-xl mb-5 font-semibold">Our Popular Items</h1>
@@ -137,9 +142,8 @@ const showFullDescription = ref(false);
                     </div>
                 </div>
             </div>
-            <!-- End Our Popular Items -->
 
-            <!-- Rekomendasi -->
+            <!-- Rekomendasi Section -->
             <div class="flex px-6 py-3 mt-8">
                 <h1 class="text-xl mb-5 font-semibold">Rekomendasi</h1>
             </div>
@@ -168,19 +172,16 @@ const showFullDescription = ref(false);
                             <span class="text-gray-400">No image</span>
                         </div>
                     </Link>
-
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">
                         {{ product.name }}
                     </h3>
-
-                    <!-- Rating Display -->
                     <div class="flex items-center mb-2">
                         <div class="flex">
                             <template v-for="i in 5" :key="i">
                                 <svg
                                     class="w-4 h-4"
                                     :class="
-                                        i <= (product.rating || 0)
+                                        i <= (Number(product.rating) || 0)
                                             ? 'text-yellow-400'
                                             : 'text-gray-300'
                                     "
@@ -195,7 +196,7 @@ const showFullDescription = ref(false);
                             </template>
                         </div>
                         <span class="text-sm text-gray-600 ml-2">
-                            {{ product.rating?.toFixed(1) || "0.0" }}
+                            {{ formatRating(product.rating) }}
                         </span>
                     </div>
 
@@ -213,41 +214,43 @@ const showFullDescription = ref(false);
                     </div>
                 </div>
             </div>
-            <!-- End Rekomendasi -->
-        </div>
-        <div class="flex px-6 py-3 mt-8">
-            <h1 class="text-xl mb-5 font-semibold">Deskripsi Toko</h1>
-        </div>
-        <div class="px-6">
-            <p class="text-gray-700 leading-relaxed">
-                <span v-if="showFullDescription">
-                    Orimoza adalah toko fashion yang berfokus pada pakaian
-                    berkualitas tinggi dengan harga terjangkau. Kami menyediakan
-                    berbagai macam produk fashion yang up-to-date dengan tren
-                    terkini, mulai dari pakaian kasual hingga formal. Setiap
-                    produk dirancang dengan cermat untuk memberikan kenyamanan
-                    dan kepercayaan diri kepada para pelanggan. Di Orimoza, kami
-                    berkomitmen untuk memberikan pengalaman belanja yang mudah,
-                    menyenangkan, dan memuaskan. Kami selalu berusaha menjadi
-                    pilihan utama bagi pelanggan yang mencari pakaian stylish
-                    dan modern.
-                </span>
-                <span v-else>
-                    Orimoza adalah toko fashion yang berfokus pada pakaian
-                    berkualitas tinggi dengan harga terjangkau. Kami menyediakan
-                    berbagai macam produk fashion...
-                </span>
-            </p>
-            <button
-                @click="showFullDescription = !showFullDescription"
-                class="mt-3 text-green-500 font-semibold hover:underline"
-            >
-                {{
-                    showFullDescription
-                        ? "Tampilkan Lebih Sedikit"
-                        : "Lihat Selengkapnya"
-                }}
-            </button>
+
+            <!-- Store Description -->
+            <div class="flex px-6 py-3 mt-8">
+                <h1 class="text-xl mb-5 font-semibold">Deskripsi Toko</h1>
+            </div>
+            <div class="px-6">
+                <p class="text-gray-700 leading-relaxed">
+                    <span v-if="showFullDescription">
+                        Orimoza adalah toko fashion yang berfokus pada pakaian
+                        berkualitas tinggi dengan harga terjangkau. Kami
+                        menyediakan berbagai macam produk fashion yang
+                        up-to-date dengan tren terkini, mulai dari pakaian
+                        kasual hingga formal. Setiap produk dirancang dengan
+                        cermat untuk memberikan kenyamanan dan kepercayaan diri
+                        kepada para pelanggan. Di Orimoza, kami berkomitmen
+                        untuk memberikan pengalaman belanja yang mudah,
+                        menyenangkan, dan memuaskan. Kami selalu berusaha
+                        menjadi pilihan utama bagi pelanggan yang mencari
+                        pakaian stylish dan modern.
+                    </span>
+                    <span v-else>
+                        Orimoza adalah toko fashion yang berfokus pada pakaian
+                        berkualitas tinggi dengan harga terjangkau. Kami
+                        menyediakan berbagai macam produk fashion...
+                    </span>
+                </p>
+                <button
+                    @click="showFullDescription = !showFullDescription"
+                    class="mt-3 text-green-500 font-semibold hover:underline"
+                >
+                    {{
+                        showFullDescription
+                            ? "Tampilkan Lebih Sedikit"
+                            : "Lihat Selengkapnya"
+                    }}
+                </button>
+            </div>
         </div>
     </MemberLayout>
 </template>

@@ -107,9 +107,10 @@ class ProductController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:500',
             'order_id' => 'required|exists:order,id'
         ]);
-
+    
         // Check if user has already rated this product in this order
         $existingRating = Rating::where([
             'user_id' => Auth::id(),
@@ -120,20 +121,21 @@ class ProductController extends Controller
         if ($existingRating) {
             return back()->with('error', 'You have already rated this product');
         }
-
-    // Create new rating
-    Rating::create([
-        'user_id' => Auth::id(),
-        'product_id' => $product->id,
-        'order_id' => $request->order_id,
-        'rating' => $request->rating
-    ]);
-
-    // Update product average rating
-    $avgRating = Rating::where('product_id', $product->id)->avg('rating');
-    $product->update(['rating' => $avgRating]);
-
-    return back()->with('success', 'Thank you for your rating!');
-}
+    
+        // Create new rating with review
+        Rating::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+            'order_id' => $request->order_id,
+            'rating' => $request->rating,
+            'review' => $request->review
+        ]);
+    
+        // Update product average rating
+        $avgRating = Rating::where('product_id', $product->id)->avg('rating');
+        $product->update(['rating' => $avgRating]);
+    
+        return back()->with('success', 'Thank you for your rating and review!');
+    }
 
 }

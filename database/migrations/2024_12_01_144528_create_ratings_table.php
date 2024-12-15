@@ -18,10 +18,8 @@ return new class extends Migration
         $table->foreignId('order_id')->constrained('order')->onDelete('cascade');
         $table->integer('rating');
         $table->timestamps();
-
-         
-            // Add unique constraint to prevent multiple ratings
-            $table->unique(['user_id', 'product_id', 'order_id']);
+        
+        $table->unique(['user_id', 'product_id', 'order_id']);
     });
 }
 
