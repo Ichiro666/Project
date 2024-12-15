@@ -37,18 +37,53 @@ const popularItems = computed(() => {
         .slice(0, 3);
 });
 
-// Recommended items based on user's most bought category
-const recommendedItems = computed(() => {
-    if (!props.products?.length || !props.mostBoughtCategory) return [];
+// Get most frequently purchased category from orders
+const getMostBoughtCategory = computed(() => {
+    if (!props.userOrders?.length) {
+        console.log("No order history found");
+        return null;
+    }
 
+    // Count purchases by category
+    const categoryCount = {};
+    props.userOrders.forEach((order) => {
+        order.items?.forEach((item) => {
+            if (item.product?.category) {
+                categoryCount[item.product.category] =
+                    (categoryCount[item.product.category] || 0) +
+                    (item.quantity || 1);
+            }
+        });
+    });
+
+    // Get category with highest count
+    const mostBought = Object.entries(categoryCount).sort(
+        ([, a], [, b]) => b - a
+    )[0]?.[0];
+
+    console.log("Most bought category:", mostBought);
+    return mostBought;
+});
+
+// Recommended items based on most bought category
+const recommendedItems = computed(() => {
+    const mostBoughtCategory = getMostBoughtCategory.value;
+
+    if (!props.products?.length || !mostBoughtCategory) {
+        return [];
+    }
+
+    // Get products from the same category
     return [...props.products]
         .filter(
             (product) =>
-                product.category === props.mostBoughtCategory &&
+                // Get products from same category as most bought
+                product.category === mostBoughtCategory &&
+                // Exclude products already shown in popular items
                 !popularItems.value.some((p) => p.id === product.id)
         )
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+        .sort(() => Math.random() - 0.5) // Randomize the recommendations
+        .slice(0, 3); // Get 3 products
 });
 
 const formatRating = (rating) => {

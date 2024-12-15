@@ -32,24 +32,11 @@ Route::get('/', function () {
 Route::get('/home', function () {
     $user = Auth::user();
     
-    // Get user's completed orders
+    // Get user's completed orders with product details
     $userOrders = Order::with(['items.product'])
         ->where('user_id', $user->id)
         ->where('status', 'completed')
         ->get();
-
-    // Calculate most frequently purchased category
-    $mostBoughtCategory = $userOrders
-        ->flatMap(fn($order) => $order->items)
-        ->groupBy(fn($item) => $item->product->category)
-        ->map(fn($group) => $group->count())
-        ->sortDesc()
-        ->keys()
-        ->first();
-
-    // Log for debugging
-    Log::info('User orders:', ['count' => $userOrders->count()]);
-    Log::info('Most bought category:', ['category' => $mostBoughtCategory]);
 
     return Inertia::render('Member/DashboardMember', [
         'products' => Product::withCount([
@@ -61,8 +48,7 @@ Route::get('/home', function () {
         ])
         ->withAvg('ratings', 'rating')
         ->get(),
-        'userOrders' => $userOrders,
-        'mostBoughtCategory' => $mostBoughtCategory
+        'userOrders' => $userOrders
     ]);
 })->middleware(['auth'])->name('home');
 
