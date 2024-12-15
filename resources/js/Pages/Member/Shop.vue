@@ -1,10 +1,13 @@
 <script setup>
 import MemberLayout from "@/Layouts/MemberLayout.vue";
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps({
-    products: Array,
+    products: {
+        type: Array,
+        required: true,
+    },
 });
 
 const form = useForm({
@@ -12,6 +15,11 @@ const form = useForm({
     quantity: 1,
     size: "M", // Default size
 });
+
+const formatRating = (rating) => {
+    const numRating = Number(rating);
+    return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
+};
 
 const addToCart = (product) => {
     form.product_id = product.id;
@@ -37,13 +45,13 @@ const addToCart = (product) => {
 
             <!-- Products Grid -->
             <div
-                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             >
                 <!-- Product Card -->
                 <div
                     v-for="product in products"
                     :key="product.id"
-                    class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100"
+                    class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
                     <!-- Image Container -->
                     <div class="relative overflow-hidden">
@@ -52,7 +60,7 @@ const addToCart = (product) => {
                                 v-if="product.image"
                                 :src="`/storage/${product.image}`"
                                 :alt="product.name"
-                                class="h-72 w-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                                class="w-full h-64 object-cover rounded-t-lg"
                             />
                             <div
                                 v-else
@@ -78,7 +86,7 @@ const addToCart = (product) => {
                                     <svg
                                         class="w-4 h-4"
                                         :class="
-                                            i <= (product.rating || 0)
+                                            i <= Number(product.rating)
                                                 ? 'text-yellow-400'
                                                 : 'text-gray-300'
                                         "
@@ -93,11 +101,7 @@ const addToCart = (product) => {
                                 </template>
                             </div>
                             <span class="text-sm text-gray-600">
-                                {{
-                                    product.rating
-                                        ? `${product.rating.toFixed(1)}`
-                                        : "0"
-                                }}
+                                {{ formatRating(product.rating) }}
                             </span>
                             <span class="text-sm text-gray-500">
                                 ({{ product.reviews_count || 0 }})

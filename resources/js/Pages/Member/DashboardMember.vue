@@ -3,9 +3,20 @@ import { ref, computed } from "vue";
 import MemberLayout from "@/Layouts/MemberLayout.vue";
 import { Link } from "@inertiajs/vue3";
 
-// Define props untuk menerima data produk dari controller
 const props = defineProps({
-    products: Array,
+    products: {
+        type: Array,
+        required: true,
+    },
+    userOrders: {
+        type: Array,
+        required: true,
+    },
+    mostBoughtCategory: {
+        type: String,
+        required: false,
+        default: null,
+    },
 });
 
 // Predefined categories
@@ -17,25 +28,29 @@ const categories = [
     { id: "celana", name: "Celana" },
 ];
 
-// Computed property untuk popular items (berdasarkan total_sold)
+// Popular items based on total sales
 const popularItems = computed(() => {
-    if (!props.products) return [];
+    if (!props.products?.length) return [];
 
     return [...props.products]
         .sort((a, b) => (b.total_sold || 0) - (a.total_sold || 0))
-        .slice(0, 3); // Ambil 3 produk terlaris
+        .slice(0, 3);
 });
 
-// Computed property untuk recommended items (berdasarkan rating)
+// Recommended items based on user's most bought category
 const recommendedItems = computed(() => {
-    if (!props.products) return [];
+    if (!props.products?.length || !props.mostBoughtCategory) return [];
 
     return [...props.products]
-        .sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0))
-        .slice(0, 3); // Ambil 3 produk dengan rating tertinggi
+        .filter(
+            (product) =>
+                product.category === props.mostBoughtCategory &&
+                !popularItems.value.some((p) => p.id === product.id)
+        )
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
 });
 
-// Format rating function
 const formatRating = (rating) => {
     const numRating = Number(rating);
     return isNaN(numRating) ? "0.0" : numRating.toFixed(1);
@@ -150,68 +165,77 @@ const showFullDescription = ref(false);
             <div
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-5 py-10 bg-white"
             >
-                <div
-                    v-for="product in recommendedItems"
-                    :key="product.id"
-                    class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
-                >
-                    <Link
-                        :href="route('detail', product.id)"
-                        class="cursor-pointer block"
+                <template v-if="recommendedItems.length">
+                    <div
+                        v-for="product in recommendedItems"
+                        :key="product.id"
+                        class="border border-gray-200 rounded-lg overflow-hidden shadow-lg p-6 bg-white transition-transform transform hover:scale-105 duration-300"
                     >
-                        <img
-                            v-if="product.image"
-                            :src="`/storage/${product.image}`"
-                            :alt="product.name"
-                            class="h-64 w-full object-cover rounded-md mb-4 hover:opacity-80 transition-opacity"
-                        />
-                        <div
-                            v-else
-                            class="h-64 w-full bg-gray-200 flex items-center justify-center"
-                        >
-                            <span class="text-gray-400">No image</span>
-                        </div>
-                    </Link>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
-                        {{ product.name }}
-                    </h3>
-                    <div class="flex items-center mb-2">
-                        <div class="flex">
-                            <template v-for="i in 5" :key="i">
-                                <svg
-                                    class="w-4 h-4"
-                                    :class="
-                                        i <= (Number(product.rating) || 0)
-                                            ? 'text-yellow-400'
-                                            : 'text-gray-300'
-                                    "
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                                    />
-                                </svg>
-                            </template>
-                        </div>
-                        <span class="text-sm text-gray-600 ml-2">
-                            {{ formatRating(product.rating) }}
-                        </span>
-                    </div>
-
-                    <p class="text-lg text-green-700 font-bold mb-4">
-                        Rp{{ product.price?.toLocaleString() }}
-                    </p>
-
-                    <div class="flex justify-between">
                         <Link
                             :href="route('detail', product.id)"
-                            class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-green-600 transition duration-300 text-center"
+                            class="cursor-pointer block"
                         >
-                            View Details
+                            <img
+                                v-if="product.image"
+                                :src="`/storage/${product.image}`"
+                                :alt="product.name"
+                                class="h-64 w-full object-cover rounded-md mb-4 hover:opacity-80 transition-opacity"
+                            />
+                            <div
+                                v-else
+                                class="h-64 w-full bg-gray-200 flex items-center justify-center"
+                            >
+                                <span class="text-gray-400">No image</span>
+                            </div>
                         </Link>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                            {{ product.name }}
+                        </h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex">
+                                <template v-for="i in 5" :key="i">
+                                    <svg
+                                        class="w-4 h-4"
+                                        :class="
+                                            i <= (Number(product.rating) || 0)
+                                                ? 'text-yellow-400'
+                                                : 'text-gray-300'
+                                        "
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                        />
+                                    </svg>
+                                </template>
+                            </div>
+                            <span class="text-sm text-gray-600 ml-2">
+                                {{ formatRating(product.rating) }}
+                            </span>
+                        </div>
+
+                        <p class="text-lg text-green-700 font-bold mb-4">
+                            Rp{{ product.price?.toLocaleString() }}
+                        </p>
+
+                        <div class="flex justify-between">
+                            <Link
+                                :href="route('detail', product.id)"
+                                class="w-40 bg-green-700 text-white py-2 rounded-md hover:bg-green-600 transition duration-300 text-center"
+                            >
+                                View Details
+                            </Link>
+                        </div>
                     </div>
+                </template>
+                <div
+                    v-else
+                    class="col-span-full text-center py-8 text-gray-500"
+                >
+                    Belum ada rekomendasi. Mulai berbelanja untuk mendapatkan
+                    rekomendasi yang sesuai dengan preferensi Anda!
                 </div>
             </div>
 

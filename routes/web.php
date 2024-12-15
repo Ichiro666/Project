@@ -8,12 +8,15 @@ use App\Http\Controllers\CartController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Product;
 use App\Models\Province;  // Add this
 use App\Models\Regency;   // Add this
 use App\Models\District;
 use App\Models\Village;
+use App\Models\Order;     // Add this
 
 //Route untuk Member
 Route::get('/', function () {
@@ -25,30 +28,43 @@ Route::get('/', function () {
     ]);
 });
 
+
 Route::get('/home', function () {
+    $user = Auth::user();
+    
+    // Get user's completed orders
+    $userOrders = Order::with(['items.product'])
+        ->where('user_id', $user->id)
+        ->where('status', 'completed')
+        ->get();
+
+    // Calculate most frequently purchased category
+    $mostBoughtCategory = $userOrders
+        ->flatMap(fn($order) => $order->items)
+        ->groupBy(fn($item) => $item->product->category)
+        ->map(fn($group) => $group->count())
+        ->sortDesc()
+        ->keys()
+        ->first();
+
+    // Log for debugging
+    Log::info('User orders:', ['count' => $userOrders->count()]);
+    Log::info('Most bought category:', ['category' => $mostBoughtCategory]);
+
     return Inertia::render('Member/DashboardMember', [
         'products' => Product::withCount([
             'orderItems as total_sold' => function($query) {
                 $query->whereHas('order', function($q) {
-                    $q->where('status', 'completed'); // Only count completed orders
+                    $q->where('status', 'completed');
                 });
             }
         ])
-        ->withAvg('ratings', 'rating') // Get average rating
-        ->get()
-        ->map(function($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'image' => $product->image,
-                'category' => $product->category,
-                'total_sold' => $product->total_sold,
-                'rating' => $product->ratings_avg_rating ?? 0
-            ];
-        })
+        ->withAvg('ratings', 'rating')
+        ->get(),
+        'userOrders' => $userOrders,
+        'mostBoughtCategory' => $mostBoughtCategory
     ]);
-})->name('home');
+})->middleware(['auth'])->name('home');
 
 //Route untuk Member 
 Route::get('/catalog/{category?}', function ($category = null) {
@@ -63,10 +79,24 @@ Route::get('/catalog/{category?}', function ($category = null) {
         'activeCategory' => $category
     ]);
 })->name('catalog');
+
 Route::get('/shop', function () {
     return Inertia::render('Member/Shop', [
-        'products' => Product::latest()->get()
-]);
+        'products' => Product::withCount('ratings as reviews_count')
+            ->withAvg('ratings as rating', 'rating')
+            ->get()
+            ->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'image' => $product->image,
+                    'category' => $product->category,
+                    'rating' => number_format($product->ratings_avg_rating ?? 0, 1), // Format rating properly
+                    'reviews_count' => $product->reviews_count ?? 0
+                ];
+            })
+    ]);
 })->name('shop');
 
 Route::get('/catalog', function () {
@@ -140,9 +170,14 @@ Route::get('/checkout', function () {
 })->name('checkout');
 
 
-Route::get('/detail/{id}', function ($id) {
+Route::get('/product/{id}', function ($id) {
     return Inertia::render('Member/DetailProduct', [
-        'product' => Product::findOrFail($id)
+        'product' => Product::with(['ratings' => function($query) {
+            $query->with('user')->latest();
+        }])
+        ->withAvg('ratings as rating', 'rating')
+        ->withCount('ratings as reviews_count')
+        ->findOrFail($id)
     ]);
 })->name('detail');
 

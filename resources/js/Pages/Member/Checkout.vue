@@ -161,8 +161,51 @@ watch(selectedDistrict, async (districtId) => {
         }
     }
 });
+const isFormValid = computed(() => {
+    const baseValidation = !!(
+        form.phone &&
+        form.province_id &&
+        form.regency_id &&
+        form.district_id &&
+        form.village_id &&
+        form.detailed_address &&
+        form.payment_method
+    );
+
+    // Additional validation for bank transfer method
+    if (form.payment_method === "bank_transfer") {
+        return (
+            baseValidation &&
+            !!(form.bank_name && form.customer_account && form.account_holder)
+        );
+    }
+
+    return baseValidation;
+});
 
 const submitCheckout = () => {
+    if (!isFormValid.value) {
+        let errorMessage = "Please fill in all required fields:\n";
+
+        if (!form.phone) errorMessage += "- Phone number\n";
+        if (!form.province_id) errorMessage += "- Province\n";
+        if (!form.regency_id) errorMessage += "- City/Regency\n";
+        if (!form.district_id) errorMessage += "- District\n";
+        if (!form.village_id) errorMessage += "- Village\n";
+        if (!form.detailed_address) errorMessage += "- Street Address\n";
+        if (!form.payment_method) errorMessage += "- Payment Method\n";
+
+        if (form.payment_method === "bank_transfer") {
+            if (!form.bank_name) errorMessage += "- Bank Selection\n";
+            if (!form.customer_account)
+                errorMessage += "- Bank Account Number\n";
+            if (!form.account_holder) errorMessage += "- Account Holder Name\n";
+        }
+
+        alert(errorMessage);
+        return;
+    }
+
     // Compile the shipping address
     const shippingAddress = [
         form.detailed_address,
@@ -637,26 +680,19 @@ const submitCheckout = () => {
                         <button
                             @click="submitCheckout"
                             type="button"
-                            class="w-full bg-green-600 text-white py-4 rounded-lg hover:bg-green-700 transition-colors duration-300 font-medium"
-                            :disabled="
-                                !form.village_id ||
-                                !form.payment_method ||
-                                !form.phone ||
-                                !form.detailed_address ||
-                                (form.payment_method === 'bank_transfer' &&
-                                    (!form.bank_name ||
-                                        !form.customer_account ||
-                                        !form.account_holder))
-                            "
+                            :class="[
+                                'w-full py-4 rounded-lg font-medium transition-colors duration-300',
+                                isFormValid
+                                    ? 'bg-green-600 text-white hover:bg-green-700'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+                            ]"
+                            :disabled="!isFormValid"
                         >
                             <span v-if="form.processing">Processing...</span>
                             <span v-else>
                                 {{
-                                    !form.village_id || !form.payment_method
-                                        ? "Complete Address and Payment Method"
-                                        : form.payment_method ===
-                                              "bank_transfer" && !form.bank_name
-                                        ? "Select Bank Account"
+                                    !isFormValid
+                                        ? "Please Complete All Required Fields"
                                         : "Place Order"
                                 }}
                             </span>

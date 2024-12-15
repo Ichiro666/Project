@@ -68,9 +68,12 @@ const updateOrderStatus = (orderId, newStatus) => {
             },
             {
                 preserveScroll: true,
-                preserveState: true,
                 onSuccess: () => {
-                    // Refresh halaman setelah sukses
+                    alert(
+                        newStatus === "completed"
+                            ? "Order accepted successfully!"
+                            : "Order cancelled successfully!"
+                    );
                     window.location.reload();
                 },
                 onError: () => {
@@ -199,7 +202,7 @@ const getStatusBadgeClass = (status) => {
                                 @click="
                                     updateOrderStatus(order.id, 'completed')
                                 "
-                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300"
                             >
                                 Accept Order
                             </button>
@@ -207,7 +210,7 @@ const getStatusBadgeClass = (status) => {
                                 @click="
                                     updateOrderStatus(order.id, 'cancelled')
                                 "
-                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300"
                             >
                                 Cancel Order
                             </button>
