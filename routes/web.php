@@ -186,8 +186,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/order', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/order', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::patch('/order/{order}/status', [OrderController::class, 'updateStatus'])
-        ->name('order.update-status');
+    Route::patch('/order/{order}/status', [OrderController::class, 'updateStatusUser'])
+        ->name('orders.update-status');
         Route::post('/products/{product}/rate', [ProductController::class, 'rate'])
         ->name('products.rate');
 });

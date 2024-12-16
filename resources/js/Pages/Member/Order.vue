@@ -62,22 +62,14 @@ const updateOrderStatus = (orderId, newStatus) => {
         )
     ) {
         form.patch(
-            route("orders.update-status", orderId),
-            {
+            route("admin.orders.update-status", {
+                order: orderId,
                 status: newStatus,
-            },
+            }),
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    alert(
-                        newStatus === "completed"
-                            ? "Order accepted successfully!"
-                            : "Order cancelled successfully!"
-                    );
-                    window.location.reload();
-                },
-                onError: () => {
-                    alert("Failed to update order status");
+                    alert("Order status updated successfully");
                 },
             }
         );

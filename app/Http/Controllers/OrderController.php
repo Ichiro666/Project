@@ -103,6 +103,25 @@ public function updateStatus(Order $order, Request $request)
     return back()->with('success', 'Order status updated successfully');
 }
 
+public function updateStatusUser(Order $order, Request $request)
+{
+    $request->validate([
+        'status' => 'required|in:pending,processing,completed,cancelled'
+    ]);
+
+    $order->update([
+        'status' => $request->status
+    ]);
+
+    return redirect()->route('orders.show', $order->id);
+
+    // return response()->json([
+    //     'success' => true,
+    //     'message' => 'Order status updated successfully',
+    //     'order' => $order
+    // ]);
+}
+
 public function getDashboardStats()
 {
     // Get completed orders
