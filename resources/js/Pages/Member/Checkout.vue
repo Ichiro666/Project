@@ -40,7 +40,15 @@ const form = useForm({
             size: item.size,
             price: item.product.price,
         })) || [],
+    payment_proof: null, // Add this new field
 });
+
+const handlePaymentProofUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        form.payment_proof = file;
+    }
+};
 
 // Payment method options with their details
 const paymentMethods = {
@@ -635,15 +643,50 @@ const submitCheckout = () => {
                                                 required
                                             />
                                         </div>
-                                    </div>
-                                    <div
-                                        class="mt-4 p-4 bg-yellow-50 rounded-lg"
-                                    >
-                                        <p class="text-sm text-yellow-800">
-                                            Please make sure the account details
-                                            are correct. Transfer proof will be
-                                            required after placing the order.
-                                        </p>
+
+                                        <!-- Add Payment Proof Upload -->
+                                        <div>
+                                            <label
+                                                class="block text-sm font-medium text-gray-700"
+                                            >
+                                                Payment Proof
+                                            </label>
+                                            <div class="mt-1">
+                                                <input
+                                                    type="file"
+                                                    @change="
+                                                        handlePaymentProofUpload
+                                                    "
+                                                    accept="image/*,.pdf"
+                                                    class="w-full px-4 py-3 rounded-lg border-gray-200 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm"
+                                                    required
+                                                />
+                                            </div>
+                                            <p
+                                                class="mt-2 text-sm text-gray-500"
+                                            >
+                                                Please upload your payment proof
+                                                (receipt/screenshot). Accepted
+                                                formats: JPG, PNG, PDF
+                                            </p>
+                                            <div
+                                                v-if="form.errors.payment_proof"
+                                                class="mt-1 text-sm text-red-600"
+                                            >
+                                                {{ form.errors.payment_proof }}
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="mt-4 p-4 bg-yellow-50 rounded-lg"
+                                        >
+                                            <p class="text-sm text-yellow-800">
+                                                Please make sure the account
+                                                details are correct. Transfer
+                                                proof will be required after
+                                                placing the order.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

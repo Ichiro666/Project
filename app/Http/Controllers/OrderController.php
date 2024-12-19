@@ -22,8 +22,13 @@ class OrderController extends Controller
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'items.*.size' => 'required|string'
+            'items.*.size' => 'required|string',
+            'payment_proof' => 'required_if:payment_method,bank_transfer|file|mimes:jpeg,png,pdf|max:2048',
         ]);
+
+        if ($request->payment_method === 'bank_transfer' && $request->hasFile('payment_proof')) {
+            $paymentProofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
 
         $order = Order::create([
             'user_id' => Auth::id(),
@@ -31,7 +36,8 @@ class OrderController extends Controller
             'total_amount' => 0, // Will be calculated
             'status' => 'pending',
             'payment_method' => $request->payment_method,
-            'shipping_address' => $request->shipping_address
+            'shipping_address' => $request->shipping_address,
+            'payment_proof' => $paymentProofPath ?? null,
         ]);
 
         $total = 0;
