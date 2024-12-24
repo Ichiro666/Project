@@ -20,52 +20,87 @@ use App\Models\District;
 use App\Models\Village;
 use App\Models\Order;     // Add this
 
-//Route untuk Member
+// Landing Page Route
 Route::get('/', function () {
+    // If user is logged in, redirect based on role
+    if (Auth::check()) {
+        $user = Auth::user();
+        return $user->role === 'admin' 
+            ? redirect()->route('dashboard')
+            : redirect()->route('home');
+    }
+    
     return Inertia::render('Member/DashboardMember', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 });
 
-
 Auth::routes(['verify' => true]);
 
-// Email Verification Routes
+// Email Verification Routes (Only for new users)
 Route::middleware(['auth'])->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
+    Route::get('verify-email', function() {
+        $user = Auth::user();
+        
+        // Skip verification for existing users
+        if ($user->created_at < '2024-01-24') {  // Adjust this date to when you implemented verification
+            return redirect()->route('home');
+        }
+        
+        return app(EmailVerificationPromptController::class)->__invoke(request());
+    })->name('verification.notice');
 
     Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-Route::get('/home', function () {
-    $user = Auth::user();
-    
-    // Get user's completed orders with product details
-    $userOrders = Order::with(['items.product'])
-        ->where('user_id', $user->id)
-        ->where('status', 'completed')
-        ->get();
+// Protected Routes
+Route::middleware(['auth'])->group(function () {
+    // Member Dashboard Route
+    Route::get('/home', function () {
+        $user = Auth::user();
+        
+        // Redirect admin to admin dashboard
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        }
 
-    return Inertia::render('Member/DashboardMember', [
-        'products' => Product::withCount([
-            'orderItems as total_sold' => function($query) {
-                $query->whereHas('order', function($q) {
-                    $q->where('status', 'completed');
-                });
-            }
-        ])
-        ->withAvg('ratings', 'rating')
-        ->get(),
-        'userOrders' => $userOrders
-    ]);
-})->middleware(['auth'])->name('home');
+        $userOrders = Order::with(['items.product'])
+            ->where('user_id', $user->id)
+            ->where('status', 'completed')
+            ->get();
+
+        return Inertia::render('Member/DashboardMember', [
+            'products' => Product::withCount([
+                'orderItems as total_sold' => function($query) {
+                    $query->whereHas('order', function($q) {
+                        $q->where('status', 'completed');
+                    });
+                }
+            ])
+            ->withAvg('ratings', 'rating')
+            ->get(),
+            'userOrders' => $userOrders
+        ]);
+    })->name('home');
+
+    // Admin Dashboard Route
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+        
+        if ($user->role !== 'admin') {
+            return redirect()->route('home');
+        }
+
+        $orderController = new OrderController();
+        $statistics = $orderController->getDashboardStats();
+        
+        return Inertia::render('Dashboard', [
+            'statistics' => $statistics
+        ]);
+    })->middleware(EnsureAdmin::class)->name('dashboard');
 });
 
 //Route untuk Member 
@@ -182,25 +217,6 @@ Route::get('/product/{id}', function ($id) {
         ->findOrFail($id)
     ]);
 })->name('detail');
-
-
-//Route untuk Admin
-Route::get('/dashboard', function () {
-    $user = Auth::user();
-    
-    // Check if user is admin
-    if ($user && $user->role === 'admin') {
-        $orderController = new OrderController();
-        $statistics = $orderController->getDashboardStats();
-        
-        return Inertia::render('Dashboard', [
-            'statistics' => $statistics
-        ]);
-    }
-    
-    // If not admin, redirect to member dashboard
-    return redirect()->route('home');
-})->middleware(['auth', EnsureAdmin::class])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
