@@ -1,22 +1,53 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
+import { onMounted, ref } from "vue";
+
+const recaptchaSiteKey = ref("");
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    "g-recaptcha-response": "",
+});
+
+// Add reCAPTCHA script
+onMounted(() => {
+    recaptchaSiteKey.value = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+    if (!document.getElementById("recaptcha-script")) {
+        const script = document.createElement("script");
+        script.id = "recaptcha-script";
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
 });
 
 const submit = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+    if (!form["g-recaptcha-response"]) {
+        alert("Please complete the reCAPTCHA verification");
+        return;
+    }
+
+    form.post(route("register"), {
+        onFinish: () => {
+            form.reset("password", "password_confirmation");
+            grecaptcha.reset();
+        },
     });
+};
+
+// Global callback function for reCAPTCHA
+window.onRecaptchaSuccess = (token) => {
+    form["g-recaptcha-response"] = token;
 };
 </script>
 
@@ -89,6 +120,19 @@ const submit = () => {
                 <InputError
                     class="mt-2"
                     :message="form.errors.password_confirmation"
+                />
+            </div>
+
+            <!-- Add reCAPTCHA before submit button -->
+            <div class="mt-4">
+                <div
+                    class="g-recaptcha"
+                    :data-sitekey="recaptchaSiteKey"
+                    data-callback="onRecaptchaSuccess"
+                ></div>
+                <InputError
+                    class="mt-2"
+                    :message="form.errors['g-recaptcha-response']"
                 />
             </div>
 

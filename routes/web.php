@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -29,6 +31,19 @@ Route::get('/', function () {
 });
 
 
+Auth::routes(['verify' => true]);
+
+// Email Verification Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('verify-email', EmailVerificationPromptController::class)
+        ->name('verification.notice');
+
+    Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/home', function () {
     $user = Auth::user();
     
@@ -51,6 +66,7 @@ Route::get('/home', function () {
         'userOrders' => $userOrders
     ]);
 })->middleware(['auth'])->name('home');
+});
 
 //Route untuk Member 
 Route::get('/catalog/{category?}', function ($category = null) {
@@ -170,28 +186,36 @@ Route::get('/product/{id}', function ($id) {
 
 //Route untuk Admin
 Route::get('/dashboard', function () {
-    $orderController = new OrderController();
-    $statistics = $orderController->getDashboardStats();
-    return Inertia::render('Dashboard', [
-        'statistics' => $statistics
-    ]);
+    $user = Auth::user();
+    
+    // Check if user is admin
+    if ($user && $user->role === 'admin') {
+        $orderController = new OrderController();
+        $statistics = $orderController->getDashboardStats();
+        
+        return Inertia::render('Dashboard', [
+            'statistics' => $statistics
+        ]);
+    }
+    
+    // If not admin, redirect to member dashboard
+    return redirect()->route('home');
 })->middleware(['auth', EnsureAdmin::class])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-Route::middleware(['auth'])->group(function () {
+});  
+Route::middleware(['auth'])->group(function () {  
     Route::post('/order', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/order', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::patch('/order/{order}/status', [OrderController::class, 'updateStatusUser'])
         ->name('orders.update-status');
-        Route::post('/products/{product}/rate', [ProductController::class, 'rate'])
+    Route::post('/products/{product}/rate', [ProductController::class, 'rate'])
         ->name('products.rate');
 });
-
 
 require __DIR__.'/auth.php';
 

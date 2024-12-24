@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Rules\Captcha;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,19 +30,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Validate reCAPTCHA
+        $request->validate([
+            'g-recaptcha-response' => ['required', new Captcha()],
+        ]);
+
         $request->authenticate();
 
         $request->session()->regenerate();
         
-        $role = Auth::user()->role;
+        $user = Auth::user();
+        
         // Role-based redirects
-        if ($role == 'admin') {
-        return redirect('/dashboard');
+        if ($user->role === 'admin') {
+            return redirect()->intended(route('dashboard'));
         }
-        if ($role == 'member') {
-        return redirect('/');
-        }
-        return redirect()->intended(route('/', absolute: false));
+        
+        // For regular members
+        return redirect()->intended(route('home'));
     }
 
     /**

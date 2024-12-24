@@ -1,31 +1,52 @@
 <script setup>
-import Checkbox from "@/Components/Checkbox.vue";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
+import { onMounted, ref } from "vue";
 
-defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
+const recaptchaSiteKey = ref("");
 
 const form = useForm({
     email: "",
     password: "",
     remember: false,
+    "g-recaptcha-response": "",
+});
+
+// Add reCAPTCHA script
+onMounted(() => {
+    recaptchaSiteKey.value = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+    if (!document.getElementById("recaptcha-script")) {
+        const script = document.createElement("script");
+        script.id = "recaptcha-script";
+        script.src = "https://www.google.com/recaptcha/api.js";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
 });
 
 const submit = () => {
+    if (!form["g-recaptcha-response"]) {
+        alert("Please complete the reCAPTCHA verification");
+        return;
+    }
+
     form.post(route("login"), {
-        onFinish: () => form.reset("password"),
+        onFinish: () => {
+            form.reset("password");
+            grecaptcha.reset();
+        },
     });
+};
+
+// Global callback function for reCAPTCHA
+window.onRecaptchaSuccess = (token) => {
+    form["g-recaptcha-response"] = token;
 };
 </script>
 
@@ -109,6 +130,19 @@ const submit = () => {
                     >
                         Forgot your password?
                     </Link>
+                </div>
+
+                <!-- Add reCAPTCHA before submit button -->
+                <div class="mt-4">
+                    <div
+                        class="g-recaptcha"
+                        :data-sitekey="recaptchaSiteKey"
+                        data-callback="onRecaptchaSuccess"
+                    ></div>
+                    <InputError
+                        class="mt-2"
+                        :message="form.errors['g-recaptcha-response']"
+                    />
                 </div>
 
                 <!-- Forgot Password Link -->
