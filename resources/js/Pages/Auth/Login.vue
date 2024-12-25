@@ -10,6 +10,7 @@ import { onMounted, ref } from "vue";
 const recaptchaSiteKey = ref("");
 
 const form = useForm({
+    _token: document.querySelector('meta[name="csrf-token"]')?.content,
     email: "",
     password: "",
     remember: false,
@@ -37,6 +38,7 @@ const submit = () => {
     }
 
     form.post(route("login"), {
+        preserveScroll: true,
         onFinish: () => {
             form.reset("password");
             grecaptcha.reset();
