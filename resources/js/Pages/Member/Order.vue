@@ -52,7 +52,7 @@ const submitRating = () => {
     });
 };
 
-// Add updateOrderStatus function
+// Update the updateOrderStatus function
 const updateOrderStatus = (orderId, newStatus) => {
     if (
         confirm(
@@ -62,14 +62,22 @@ const updateOrderStatus = (orderId, newStatus) => {
         )
     ) {
         form.patch(
-            route("admin.orders.update-status", {
+            route("orders.update-status", {
+                // Changed from admin.orders to orders
                 order: orderId,
                 status: newStatus,
             }),
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    alert("Order status updated successfully");
+                    // Reload the page to reflect the updated status
+                    window.location.reload();
+                },
+                onError: (errors) => {
+                    alert(
+                        "Failed to update order status: " +
+                            (errors.message || "Please try again")
+                    );
                 },
             }
         );
@@ -185,25 +193,49 @@ const getStatusBadgeClass = (status) => {
                             </p>
                         </div>
 
-                        <!-- Add Action Buttons for Processing Orders -->
+                        <!-- Modify the Action Buttons section -->
                         <div
                             v-if="order.status === 'processing'"
-                            class="col-span-full flex justify-end space-x-4"
+                            class="col-span-full flex justify-end space-x-4 mt-4"
                         >
                             <button
                                 @click="
                                     updateOrderStatus(order.id, 'completed')
                                 "
-                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300"
+                                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-300 flex items-center gap-2"
                             >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
                                 Accept Order
                             </button>
                             <button
                                 @click="
                                     updateOrderStatus(order.id, 'cancelled')
                                 "
-                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300"
+                                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-300 flex items-center gap-2"
                             >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
                                 Cancel Order
                             </button>
                         </div>

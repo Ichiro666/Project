@@ -101,33 +101,6 @@ const toggleSidebar = () => {
                     <span class="font-medium">Orders</span>
                 </NavLink>
 
-                <!-- Customers Link -->
-                <NavLink
-                    :href="route('customers.index')"
-                    :active="route().current('customers.index')"
-                    class="nav-link"
-                    :class="{
-                        'bg-gray-100': route().current('customers.index'),
-                    }"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="nav-icon"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M8 11a4 4 0 100-8 4 4 0 000 8zm0-2a2 2 0 100-4 2 2 0 000 4z"
-                            clip-rule="evenodd"
-                        />
-                        <path
-                            d="M11 14a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2z"
-                        />
-                    </svg>
-                    <span class="font-medium">Customers</span>
-                </NavLink>
-
                 <!-- Profile Link -->
                 <NavLink
                     :href="route('profile.edit')"

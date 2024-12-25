@@ -40,7 +40,11 @@ const submit = () => {
 
     form.post(route("register"), {
         preserveScroll: true,
-        onFinish: () => {
+        onSuccess: () => {
+            // Redirect to email verification notice page
+            window.location.href = route("verification.notice");
+        },
+        onError: () => {
             form.reset("password", "password_confirmation");
             grecaptcha.reset();
         },
